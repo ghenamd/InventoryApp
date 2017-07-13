@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="float_tab_margin">16dp</dimen>
+    <dimen name="padding_layout">16dp</dimen>
+    <dimen name="margin_layout">16dp</dimen>
+    <dimen name="padding_right">6dp</dimen>
+    <dimen name="textSize">14sp</dimen>
+    <dimen name="padding_editor">8dp</dimen>
+</resources>
