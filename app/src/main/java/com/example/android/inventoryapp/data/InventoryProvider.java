@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
+import static com.example.android.inventoryapp.data.InventoryContract.InventoryEntry._ID;
+
 /**
  * Created by Ghena on 06/07/2017.
  */
@@ -75,7 +77,7 @@ public class InventoryProvider extends ContentProvider{
                 break;
             case INVENTORY_ID:
 
-                selection = InventoryContract.InventoryEntry._ID + "=?";
+                selection = _ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
 
                 // This will perform a query on the inventory table  to return a
@@ -166,7 +168,7 @@ public class InventoryProvider extends ContentProvider{
                 // For the INVENTORY_ID code, extract out the ID from the URI,
                 // so we know which row to update. Selection will be "_id=?" and selection
                 // arguments will be a String array containing the actual ID.
-                selection = InventoryContract.InventoryEntry._ID + "=?";
+                selection = _ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
                 return updateProduct(uri, contentValues, selection, selectionArgs);
             default:
@@ -248,7 +250,7 @@ public class InventoryProvider extends ContentProvider{
                 break;
             case INVENTORY_ID:
                 // Delete a single row given by the ID in the URI
-                selection = INVENTORY_ID + "=?";
+                selection = _ID + "=?";// Mistake made: always use ID not Inventory_ID
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
                 rowsDeleted = database.delete(InventoryContract.InventoryEntry.TABLE_NAME, selection, selectionArgs);
                 break;
