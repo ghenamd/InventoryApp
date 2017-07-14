@@ -1,116 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
-
+    android:background="@color/white"
+    android:orientation="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_layout">
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:background="@color/divider"
-            android:id="@+id/product_image_editor"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/new_picture_button"
-            android:text="@string/insert_a_new_picture"
-            android:layout_alignParentRight="true"/>
 
+        <ImageView
+            android:id="@+id/product_image_editor"
+            android:layout_width="@dimen/imageView_dimen"
+            android:scaleType="fitXY"
+            android:layout_height="@dimen/imageView_dimen"
+            android:background="@color/divider" />
+
+        <Button
+            android:id="@+id/new_picture_button"
+            style="@style/buttonStyle_one"
+            android:layout_alignParentRight="true"
+            android:text="@string/insert_a_new_picture" />
     </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="@dimen/padding_layout">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/primary_text"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:text="@string/product_name_editor"/>
+
+            <TextView
+                style="@style/textViewStyle"
+                android:layout_weight="1"
+                android:text="@string/product_name_editor" />
+
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:id="@+id/product_name_editor"
+               style="@style/editText"
                 android:layout_weight="2"
-                android:inputType="textCapWords"
                 android:hint="@string/name_editor"
-                android:textAppearance="?android:textAppearanceMedium"/>
+                android:inputType="textCapWords" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
-                android:layout_width="0dp"
+                style="@style/textViewStyle"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textColor="@color/primary_text"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:text="@string/product_price_editor"/>
+                android:text="@string/product_price_editor" />
+
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:id="@+id/product_price_editor"
+                style="@style/editText"
                 android:layout_weight="2"
-                android:inputType="number"
                 android:hint="@string/price_editor_hint"
-                android:textAppearance="?android:textAppearanceMedium"/>
+                android:inputType="number" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
-                android:layout_width="0dp"
+                style="@style/textViewStyle"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textColor="@color/primary_text"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:text="@string/supplier_editior"/>
+                android:text="@string/supplier_editior" />
+
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:id="@+id/product_supplier_editor"
+               style="@style/editText"
                 android:layout_weight="2"
-                android:inputType="textCapWords"
                 android:hint="@string/name_editor"
-                android:textAppearance="?android:textAppearanceMedium"/>
+                android:inputType="textCapWords" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
-                android:layout_width="0dp"
+                style="@style/textViewStyle"
                 android:layout_weight="2"
-                android:layout_height="wrap_content"
-                android:textColor="@color/primary_text"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:text="@string/quantity_editor"/>
+                android:text="@string/quantity_editor"
+                />
+
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:id="@+id/product_quantity_editor"
-                android:layout_weight="3"
-                android:inputType="number"
-                android:hint="@string/units_editor"
-                android:textAppearance="?android:textAppearanceMedium"/>
-            <Button
-                android:layout_width="0dp"
+                style="@style/editText"
                 android:layout_weight="1"
+                android:hint="@string/units_editor"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/increment"
+                style="@style/buttonStyle"
+                android:text="@string/plus" />
+
+            <Button
+                android:id="@+id/decrement"
+                style="@style/buttonStyle"
+                android:text="@string/minus" />
+
+            <Button
                 android:id="@+id/sale"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/padding_editor"
-                android:text="@string/sale_editor"/>
+                style="@style/buttonStyle"
+                android:text="@string/sale_editor" />
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/order"
+            style="@style/buttonStyle_one"
+            android:layout_marginTop="@dimen/layout_margin_top"
+            android:text="@string/order"/>
     </LinearLayout>
-
-
 </LinearLayout>
+</ScrollView>

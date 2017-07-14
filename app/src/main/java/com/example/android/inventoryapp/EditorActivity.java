@@ -17,6 +17,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -49,12 +50,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private Uri mUri;
     private Uri mCurrentProductUri;
     private static final String STATE_URI = "STATE_URI";
-
     private static final int SEND_MAIL_REQUEST = 1;
     private static final int PICK_IMAGE_REQUEST = 0;
-
     private static final int INVENTORY_LOADER = 0;
-
     private boolean mInventoryHasChanged = false;
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
@@ -64,13 +62,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         mCurrentProductUri = intent.getData();
 
         if (mCurrentProductUri == null) {
@@ -105,23 +102,58 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         sale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String quantityEdit = quantity.getText().toString().trim();
-                if (quantityEdit == null || quantityEdit.isEmpty()) {
-                    quantityEdit = "0";
-                }
-                mQuantity = Integer.parseInt(quantityEdit);
-                mQuantity -= 1;
-                if (mQuantity <= 0) {
-                    Toast.makeText(EditorActivity.this, R.string.quantity_zero, Toast.LENGTH_SHORT).show();
-                    mQuantity = 0;
-                }
-                quantity.setText(String.valueOf(mQuantity));
+                decrement();
             }
         });
-
+        final Button decrement = (Button)findViewById(R.id.decrement);
+        decrement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                decrement();
+            }
+        });
+        Button increment = (Button)findViewById(R.id.increment);
+        increment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                increment();
+            }
+        });
+        Button order = (Button)findViewById(R.id.order);
+        order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT,mProductName.toString().trim());
+                emailIntent.putExtra(Intent.EXTRA_TEXT," Dear " + mSupplier.toString().trim());
+                startActivity(Intent.createChooser(emailIntent, "Send Email"));
+            }
+        });
     }
+    public void decrement(){
+        String quantityEdit = quantity.getText().toString().trim();
+        if (quantityEdit.isEmpty()) {
+            quantityEdit = "0";
+        }
+        mQuantity = Integer.parseInt(quantityEdit);
+        mQuantity -= 1;
+        if (mQuantity <= 0) {
+            Toast.makeText(EditorActivity.this, R.string.quantity_zero, Toast.LENGTH_SHORT).show();
+            mQuantity = 0;
+        }
+        quantity.setText(String.valueOf(mQuantity));
+    }
+    public void increment(){
 
+        String quantityEdit = quantity.getText().toString().trim();
+        if (quantityEdit.isEmpty()) {
+            quantityEdit = "0";
+        }
+        mQuantity = Integer.parseInt(quantityEdit);
+        mQuantity += 1;
+        Log.v("This is QUANTITY:",String.valueOf(mQuantity));
+        quantity.setText(String.valueOf(mQuantity));
+    }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -129,7 +161,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (mUri != null)
             outState.putString(STATE_URI, mUri.toString());
     }
-
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -148,7 +179,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             });
         }
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         // The ACTION_OPEN_DOCUMENT intent was sent with the request code READ_REQUEST_CODE.
@@ -228,7 +258,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         super.onPrepareOptionsMenu(menu);
         return true;
     }
-
     private void saveProduct() {
         String productName = mProductName.getText().toString().trim();
         String productPrice = mPrice.getText().toString().trim();
@@ -361,7 +390,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 null,                   // No selection clause
                 null,                   // No selection arguments
                 null);                  // Default sort order
-
     }
 
     @Override
@@ -393,7 +421,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPrice.setText("");
         mSupplier.setText("");
         quantity.setText("");
-        mProductImage.setImageResource(R.mipmap.ic_launcher_round);
+
     }
 
     private void showUnsavedChangesDialog(

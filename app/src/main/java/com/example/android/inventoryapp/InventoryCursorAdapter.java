@@ -63,7 +63,7 @@ public class InventoryCursorAdapter extends CursorAdapter{
         productImage.setImageURI(image);
         Picasso.with(context)
                 .load(image)
-                .placeholder(R.mipmap.ic_launcher)// This is the image holder if the image is missing
+                .placeholder(R.drawable.placeholder)// This is the image holder if the image is missing
                 .fit()
                 .into(productImage);
 

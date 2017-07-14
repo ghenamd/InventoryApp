@@ -33,5 +33,8 @@
     <string name="unknown_supplier">Unknown supplier</string>
     <string name="unknown_quantity">Unknown quantity</string>
     <string name="quantity_zero">Quantity cannot be less than 0</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="order">order</string>
 
 </resources>
