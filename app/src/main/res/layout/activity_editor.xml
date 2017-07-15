@@ -97,7 +97,7 @@
             <EditText
                 android:id="@+id/product_quantity_editor"
                 style="@style/editText"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:hint="@string/units_editor"
                 android:inputType="number" />
 
@@ -110,11 +110,6 @@
                 android:id="@+id/decrement"
                 style="@style/buttonStyle"
                 android:text="@string/minus" />
-
-            <Button
-                android:id="@+id/sale"
-                style="@style/buttonStyle"
-                android:text="@string/sale_editor" />
 
         </LinearLayout>
 

@@ -54,6 +54,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private static final int PICK_IMAGE_REQUEST = 0;
     private static final int INVENTORY_LOADER = 0;
     private boolean mInventoryHasChanged = false;
+    private boolean infoFilled = true;
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -98,39 +99,36 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
-        Button sale = (Button) findViewById(R.id.sale);
-        sale.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                decrement();
-            }
-        });
-        final Button decrement = (Button)findViewById(R.id.decrement);
+        final Button decrement = (Button) findViewById(R.id.decrement);
         decrement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 decrement();
             }
         });
-        Button increment = (Button)findViewById(R.id.increment);
+        Button increment = (Button) findViewById(R.id.increment);
         increment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 increment();
             }
         });
-        Button order = (Button)findViewById(R.id.order);
+        Button order = (Button) findViewById(R.id.order);
         order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT,mProductName.toString().trim());
-                emailIntent.putExtra(Intent.EXTRA_TEXT," Dear " + mSupplier.toString().trim());
-                startActivity(Intent.createChooser(emailIntent, "Send Email"));
+                emailIntent.setData(Uri.parse("mailto:"));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Product name: ");
+                emailIntent.putExtra(Intent.EXTRA_TEXT, " Dear ");
+                if (emailIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(emailIntent);
+                }
             }
         });
     }
-    public void decrement(){
+
+    public void decrement() {
         String quantityEdit = quantity.getText().toString().trim();
         if (quantityEdit.isEmpty()) {
             quantityEdit = "0";
@@ -143,7 +141,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
         quantity.setText(String.valueOf(mQuantity));
     }
-    public void increment(){
+
+    public void increment() {
 
         String quantityEdit = quantity.getText().toString().trim();
         if (quantityEdit.isEmpty()) {
@@ -151,9 +150,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
         mQuantity = Integer.parseInt(quantityEdit);
         mQuantity += 1;
-        Log.v("This is QUANTITY:",String.valueOf(mQuantity));
+        Log.v("This is QUANTITY:", String.valueOf(mQuantity));
         quantity.setText(String.valueOf(mQuantity));
     }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -161,6 +161,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (mUri != null)
             outState.putString(STATE_URI, mUri.toString());
     }
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -179,6 +180,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             });
         }
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         // The ACTION_OPEN_DOCUMENT intent was sent with the request code READ_REQUEST_CODE.
@@ -258,38 +260,29 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         super.onPrepareOptionsMenu(menu);
         return true;
     }
+
     private void saveProduct() {
         String productName = mProductName.getText().toString().trim();
         String productPrice = mPrice.getText().toString().trim();
         String productSupplier = mSupplier.getText().toString().trim();
         String productQuantity = quantity.getText().toString().trim();
-
         ContentValues values = new ContentValues();
-        values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_NAME, productName);
 
-        double price = 0.0;
-        if (TextUtils.isEmpty(productPrice)){
-            values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_PRICE,price);
-        } else {values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_PRICE, Double.parseDouble(productPrice));}
-        values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_SUPPLIER, productSupplier);
-
-        int quantity = 0;
-        if (TextUtils.isEmpty(productQuantity)){
-            values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_QUANTITY,quantity);
-        } else {
-            values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_QUANTITY, Integer.parseInt(productQuantity));
-        }
-        if (mUri == null) {
-            values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_PICTURE, "");
-        } else {
-            values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_PICTURE, mUri.toString());
-        }
-
-        if (mCurrentProductUri == null && TextUtils.isEmpty(productName) && TextUtils.isEmpty(productPrice)
-                && TextUtils.isEmpty(productSupplier) && TextUtils.isEmpty(productQuantity)) {
-            Toast.makeText(this, "Please insert name, price and supplier", Toast.LENGTH_SHORT).show();
+        //Check if there was a name entered if not show a Toast message
+        if (TextUtils.isEmpty(productName) || (TextUtils.isEmpty(productPrice)) || (TextUtils.isEmpty(productSupplier)) ||
+                (TextUtils.isEmpty(productQuantity)) || (mUri == null || TextUtils.isEmpty(mUri.toString()))) {
+            infoFilled = false;
+            Toast.makeText(EditorActivity.this, "Please enter the missing info", Toast.LENGTH_SHORT).show();
             return;
+        } else {
+            values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_NAME, productName);
+            values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_PRICE, Double.parseDouble(productPrice));
+            values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_SUPPLIER, productSupplier);
+            values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_QUANTITY, Integer.parseInt(productQuantity));
+            values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_PICTURE, mUri.toString());
+            infoFilled = true;
         }
+
         if (mCurrentProductUri == null) {
             Uri newUri = getContentResolver().insert(InventoryContract.InventoryEntry.CONTENT_URI, values);
             if (newUri == null) {
@@ -342,7 +335,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             case R.id.action_save:
                 // Save a new product in the database
                 saveProduct();
-                finish();
+                if (infoFilled) {
+                    finish();
+                }
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:

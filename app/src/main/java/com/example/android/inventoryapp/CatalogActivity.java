@@ -55,6 +55,7 @@ public class CatalogActivity extends AppCompatActivity  implements LoaderManager
 
                 // Set the URI on the data field of the intent
                 intent.setData(currentProductUri);
+                Log.v("Uri: ",currentProductUri.toString());
 
                 // Launch the {@link EditorActivity} to display the data for the current pet.
                 startActivity(intent);
@@ -86,9 +87,9 @@ public class CatalogActivity extends AppCompatActivity  implements LoaderManager
     /**
      * Helper method to delete all pets in the database.
      */
-    private void deleteAllPets() {
+    private void deleteAllProducts() {
         int rowsDeleted = getContentResolver().delete(InventoryContract.InventoryEntry.CONTENT_URI, null, null);
-        Log.v("CatalogActivity", rowsDeleted + " rows deleted from pet database");
+        Log.v("CatalogActivity", rowsDeleted + " rows deleted from product database");
     }
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -129,7 +130,7 @@ public class CatalogActivity extends AppCompatActivity  implements LoaderManager
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Delete" button, so delete the pet.
-                deleteAllPets();
+                deleteAllProducts();
             }
         });
         builder.setNegativeButton(R.string.cancel_dialog, new DialogInterface.OnClickListener() {
