@@ -36,5 +36,6 @@
     <string name="plus">+</string>
     <string name="minus">-</string>
     <string name="order">order</string>
+    <string name="missing_info">Please enter the missing info</string>
 
 </resources>

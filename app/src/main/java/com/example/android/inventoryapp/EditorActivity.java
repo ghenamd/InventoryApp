@@ -128,7 +128,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         });
     }
 
-    public void decrement() {
+    private void decrement() {
         String quantityEdit = quantity.getText().toString().trim();
         if (quantityEdit.isEmpty()) {
             quantityEdit = "0";
@@ -142,7 +142,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         quantity.setText(String.valueOf(mQuantity));
     }
 
-    public void increment() {
+    private void increment() {
 
         String quantityEdit = quantity.getText().toString().trim();
         if (quantityEdit.isEmpty()) {
@@ -272,7 +272,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (TextUtils.isEmpty(productName) || (TextUtils.isEmpty(productPrice)) || (TextUtils.isEmpty(productSupplier)) ||
                 (TextUtils.isEmpty(productQuantity)) || (mUri == null || TextUtils.isEmpty(mUri.toString()))) {
             infoFilled = false;
-            Toast.makeText(EditorActivity.this, "Please enter the missing info", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditorActivity.this, R.string.missing_info, Toast.LENGTH_SHORT).show();
             return;
         } else {
             values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_NAME, productName);
